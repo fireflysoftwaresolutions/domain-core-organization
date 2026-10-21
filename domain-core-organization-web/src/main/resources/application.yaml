@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: domain-core-organization
+server:
+  port: ${SERVER_PORT:18124}
+firefly:
+  organization:
+    branch:
+      adapter: sandbox
+      core-base-url: http://localhost:8080
