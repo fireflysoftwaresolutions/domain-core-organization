@@ -1,14 +1,11 @@
 openapi: 3.0.3
 info:
   title: Domain Organization API
-  version: 1.0.0
-  contact:
-    name: Firefly Software Foundation
-    email: dev@fireflysoftware.io
+  version: 26.10.4
 paths:
   /api/v1/branches/{id}:
     get:
-      tags: [Branch]
+      tags: [Branches]
       operationId: read
       parameters:
         - name: id
@@ -17,13 +14,13 @@ paths:
           schema: {type: string, format: uuid}
       responses:
         "200":
-          description: Found
+          description: Branch
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RecordView"
+                $ref: "#/components/schemas/BranchView"
     put:
-      tags: [Branch]
+      tags: [Branches]
       operationId: update
       parameters:
         - name: id
@@ -35,37 +32,34 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RecordView"
+              $ref: "#/components/schemas/BranchDraft"
       responses:
         "200":
           description: Updated
-    delete:
-      tags: [Branch]
-      operationId: remove
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema: {type: string, format: uuid}
-      responses:
-        "204":
-          description: Removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoredBranch"
   /api/v1/branches:
     post:
-      tags: [Branch]
+      tags: [Branches]
       operationId: create
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RecordView"
+              $ref: "#/components/schemas/BranchDraft"
       responses:
-        "201":
-          description: Created
+        "200":
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoredBranch"
 components:
   schemas:
-    RecordView:
+    BranchView:
       type: object
       properties:
         id:
@@ -73,3 +67,14 @@ components:
           format: uuid
         label:
           type: string
+    BranchDraft:
+      type: object
+      additionalProperties: true
+    StoredBranch:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        body:
+          $ref: "#/components/schemas/BranchDraft"
