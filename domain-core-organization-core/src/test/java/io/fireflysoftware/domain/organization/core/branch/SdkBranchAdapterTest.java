@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Firefly Software Foundation
+ * Copyright 2026 Firefly Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.fireflysoftware.domain.organization;
+package io.fireflysoftware.domain.organization.core.branch;
 
 import io.fireflysoftware.core.org.sdk.api.BranchManagementApi;
 import io.fireflysoftware.core.org.sdk.model.BranchDTO;
@@ -29,14 +29,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class SdkAdapterTest {
+class SdkBranchAdapterTest {
     @Test
     void sandboxIsTheDefaultAndDoesNotOpenASocket() {
         new ApplicationContextRunner()
-                .withUserConfiguration(AdapterConfiguration.class)
+                .withUserConfiguration(BranchAdapterConfiguration.class)
                 .run(context -> {
-                    CorePort port = context.getBean(CorePort.class);
-                    assertThat(port).isInstanceOf(SandboxAdapter.class);
+                    BranchPort port = context.getBean(BranchPort.class);
+                    assertThat(port).isInstanceOf(SandboxBranchAdapter.class);
                     assertThat(port.read(null).block().label()).isEqualTo("HQ");
                 });
     }
@@ -44,9 +44,9 @@ class SdkAdapterTest {
     @Test
     void corePropertySelectsTheSdkAdapter() {
         new ApplicationContextRunner()
-                .withUserConfiguration(AdapterConfiguration.class)
+                .withUserConfiguration(BranchAdapterConfiguration.class, io.fireflysoftware.domain.organization.infra.BranchClientFactory.class)
                 .withPropertyValues("firefly.organization.branch.adapter=core")
-                .run(context -> assertThat(context.getBean(CorePort.class)).isInstanceOf(SdkAdapter.class));
+                .run(context -> assertThat(context.getBean(BranchPort.class)).isInstanceOf(SdkBranchAdapter.class));
     }
 
     @Test
@@ -56,7 +56,7 @@ class SdkAdapterTest {
         BranchDTO dto = mock(BranchDTO.class);
         when(dto.getId()).thenReturn(id);
         when(api.getBranchById(id, null)).thenReturn(Mono.just(dto));
-        BranchView view = new SdkAdapter(api).read(id).block();
+        BranchView view = new SdkBranchAdapter(api).read(id).block();
         assertThat(view.id()).isEqualTo(id);
         verify(api).getBranchById(id, null);
     }

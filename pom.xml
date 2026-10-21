@@ -13,13 +13,18 @@
     <version>26.10.3</version>
     <packaging>pom</packaging>
     <name>domain-core-organization</name>
-    <description>Organization. The sandbox adapter is the default. The live adapter calls the core SDK.</description>
+    <description>Sandbox is the default and opens no socket. Live calls the core SDK.</description>
     <modules>
         <module>domain-core-organization-core</module>
+        <module>domain-core-organization-interfaces</module>
         <module>domain-core-organization-web</module>
+        <module>domain-core-organization-sdk</module>
+        <module>domain-core-organization-infra</module>
     </modules>
     <properties>
         <java.version>25</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
     </properties>
     <dependencyManagement>
@@ -31,7 +36,22 @@
             </dependency>
             <dependency>
                 <groupId>io.fireflysoftware</groupId>
+                <artifactId>domain-core-organization-interfaces</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.fireflysoftware</groupId>
                 <artifactId>domain-core-organization-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.fireflysoftware</groupId>
+                <artifactId>domain-core-organization-sdk</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.fireflysoftware</groupId>
+                <artifactId>domain-core-organization-infra</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

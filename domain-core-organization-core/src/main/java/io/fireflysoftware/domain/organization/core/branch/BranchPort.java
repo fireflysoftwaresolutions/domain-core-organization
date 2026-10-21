@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Firefly Software Foundation
+ * Copyright 2026 Firefly Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,22 @@
  * limitations under the License.
  */
 
-package io.fireflysoftware.domain.organization;
+package io.fireflysoftware.domain.organization.core.branch;
 
+import io.fireflysoftware.core.org.sdk.model.BranchDTO;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-/** Reads the core through its SDK when the live adapter is selected. Sandbox does not open a socket. */
-public interface CorePort {
+/** Core reads and writes. The sandbox implementation opens no socket. */
+public interface BranchPort {
     Mono<BranchView> read(UUID id);
+
+    Mono<StoredBranch> load(UUID id);
+
+    Mono<StoredBranch> create(BranchDTO draft);
+
+    Mono<StoredBranch> update(UUID id, BranchDTO draft);
+
+    Mono<Void> remove(UUID id);
 }

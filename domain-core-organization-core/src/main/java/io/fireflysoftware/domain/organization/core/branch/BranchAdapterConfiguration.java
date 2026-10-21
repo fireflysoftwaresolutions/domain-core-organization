@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Firefly Software Foundation
+ * Copyright 2026 Firefly Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package io.fireflysoftware.domain.organization;
+package io.fireflysoftware.domain.organization.core.branch;
 
-import org.springframework.beans.factory.annotation.Value;
+import io.fireflysoftware.core.org.sdk.api.BranchManagementApi;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class AdapterConfiguration {
+public class BranchAdapterConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "firefly.organization.branch", name = "adapter", havingValue = "sandbox", matchIfMissing = true)
-    public CorePort sandboxPort() {
-        return new SandboxAdapter();
+    public BranchPort sandboxBranchPort() {
+        return new SandboxBranchAdapter();
     }
 
     @Bean
     @ConditionalOnProperty(prefix = "firefly.organization.branch", name = "adapter", havingValue = "core")
-    public CorePort corePort(
-            @Value("${firefly.organization.branch.core-base-url:http://localhost:8080}") String basePath) {
-        return new SdkAdapter(basePath);
+    public BranchPort coreBranchPort(BranchManagementApi api) {
+        return new SdkBranchAdapter(api);
     }
 }

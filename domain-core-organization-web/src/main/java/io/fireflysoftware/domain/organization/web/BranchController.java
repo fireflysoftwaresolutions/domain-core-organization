@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Firefly Software Foundation
+ * Copyright 2026 Firefly Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,15 @@
 
 package io.fireflysoftware.domain.organization.web;
 
-import io.fireflysoftware.domain.organization.CorePort;
-import io.fireflysoftware.domain.organization.BranchView;
+import io.fireflysoftware.core.org.sdk.model.BranchDTO;
+import io.fireflysoftware.domain.organization.core.branch.BranchService;
+import io.fireflysoftware.domain.organization.core.branch.BranchView;
+import io.fireflysoftware.domain.organization.core.branch.StoredBranch;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
@@ -28,15 +33,25 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/branches")
-public class ReadController {
-    private final CorePort port;
+public class BranchController {
+    private final BranchService service;
 
-    public ReadController(CorePort port) {
-        this.port = port;
+    public BranchController(BranchService service) {
+        this.service = service;
     }
 
     @GetMapping("/{id}")
     public Mono<BranchView> read(@PathVariable UUID id) {
-        return port.read(id);
+        return service.read(id);
+    }
+
+    @PostMapping
+    public Mono<StoredBranch> create(@RequestBody BranchDTO draft) {
+        return service.register(draft);
+    }
+
+    @PutMapping("/{id}")
+    public Mono<StoredBranch> update(@PathVariable UUID id, @RequestBody BranchDTO draft) {
+        return service.update(id, draft);
     }
 }
