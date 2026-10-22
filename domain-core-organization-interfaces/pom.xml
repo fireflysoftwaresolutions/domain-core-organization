@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.fireflysoftware</groupId>
         <artifactId>domain-core-organization</artifactId>
-        <version>26.10.5</version>
+        <version>26.10.6</version>
     </parent>
     <artifactId>domain-core-organization-interfaces</artifactId>
     <name>domain-core-organization-interfaces</name>
