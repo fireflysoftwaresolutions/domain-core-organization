@@ -8,7 +8,13 @@
     </parent>
     <artifactId>domain-core-organization-web</artifactId>
     <name>domain-core-organization-web</name>
+    <properties>
+        <openapi.gen.skip>false</openapi.gen.skip>
+        <openapi.gen.mainClass>io.fireflysoftware.domain.organization.web.DomainApplication</openapi.gen.mainClass>
+        <openapi.gen.outputDir>${project.basedir}/../domain-core-organization-sdk/src/main/resources</openapi.gen.outputDir>
+    </properties>
     <dependencies>
+        <dependency><groupId>io.fireflysoftware</groupId><artifactId>domain-core-organization-core</artifactId></dependency>
         <dependency>
             <groupId>io.fireflysoftware</groupId>
             <artifactId>domain-core-organization-interfaces</artifactId>
@@ -21,6 +27,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+
+        <dependency><groupId>org.fireflyframework</groupId><artifactId>fireflyframework-security-resource-server</artifactId></dependency>
+        <dependency><groupId>org.fireflyframework</groupId><artifactId>fireflyframework-security-adapter-opa</artifactId></dependency>
+        <dependency><groupId>org.springdoc</groupId><artifactId>springdoc-openapi-starter-webflux-api</artifactId><version>${springdoc-openapi.version}</version></dependency>
+        <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-test</artifactId><scope>test</scope></dependency>
+        <dependency><groupId>io.projectreactor</groupId><artifactId>reactor-test</artifactId><scope>test</scope></dependency>
     </dependencies>
     <build>
         <plugins>
@@ -28,6 +40,15 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
+                    <execution>
+                        <id>openapi-start</id>
+                        <configuration>
+                            <profiles combine.self="override">
+                                <profile>openapi-gen</profile>
+                                <profile>current-bank-owner</profile>
+                            </profiles>
+                        </configuration>
+                    </execution>
                     <execution>
                         <goals>
                             <goal>repackage</goal>
