@@ -1,64 +1,291 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
-  title: Domain Organization API
-  version: 26.10.6
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:18080
+  description: Generated server url
 paths:
   /api/v1/branches/{id}:
     get:
-      tags: [Branches]
+      tags:
+      - branch-controller
       operationId: read
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema: {type: string, format: uuid}
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
       responses:
         "200":
-          description: Branch
+          description: OK
           content:
-            application/json:
+            '*/*':
               schema:
                 $ref: "#/components/schemas/BranchView"
     put:
-      tags: [Branches]
+      tags:
+      - branch-controller
       operationId: update
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema: {type: string, format: uuid}
-      requestBody:
+      - name: id
+        in: path
         required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/BranchDraft"
+              $ref: "#/components/schemas/BranchDTO"
+        required: true
       responses:
         "200":
-          description: Updated
+          description: OK
           content:
-            application/json:
+            '*/*':
               schema:
                 $ref: "#/components/schemas/StoredBranch"
   /api/v1/branches:
     post:
-      tags: [Branches]
+      tags:
+      - branch-controller
       operationId: create
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/BranchDraft"
+              $ref: "#/components/schemas/BranchDTO"
+        required: true
       responses:
         "200":
-          description: Registered
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StoredBranch"
+  /api/v1/organization/tenants/{tenantId}/banks/{bankId}/enrollments/{enrollmentId}/versions/{version}/current:
+    get:
+      tags:
+      - Bank Enrollment Owner
+      summary: Read an exact current Bank enrollment owner
+      description: "Requires current administrative authority at both boundaries and\
+        \ a fresh original owner response. The bounded no-store summary is not financial,\
+        \ product, currency or book admission."
+      operationId: getCurrentBankOwner
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: bankId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: enrollmentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: version
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: X-Firefly-Operation-Deadline
+        in: header
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Exact bounded no-store administrative owner summary
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/StoredBranch"
+                $ref: "#/components/schemas/CurrentBankOwnerView"
+        "400":
+          description: Invalid exact owner selectors
+        "403":
+          description: Current administrative read denied
+        "409":
+          description: The exact owner is not current
+        "503":
+          description: A current source or finite observation is unavailable
+      security:
+      - organizationBearer: []
 components:
   schemas:
+    BranchDTO:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - "null"
+          format: uuid
+        bankId:
+          type:
+          - string
+          - "null"
+          format: uuid
+        regionId:
+          type:
+          - string
+          - "null"
+          format: uuid
+        code:
+          type:
+          - string
+          - "null"
+        name:
+          type:
+          - string
+          - "null"
+        description:
+          type:
+          - string
+          - "null"
+        phoneNumber:
+          type:
+          - string
+          - "null"
+        email:
+          type:
+          - string
+          - "null"
+        addressLine:
+          type:
+          - string
+          - "null"
+        postalCode:
+          type:
+          - string
+          - "null"
+        city:
+          type:
+          - string
+          - "null"
+        state:
+          type:
+          - string
+          - "null"
+        countryId:
+          type:
+          - string
+          - "null"
+          format: uuid
+        timeZoneId:
+          type:
+          - string
+          - "null"
+          format: uuid
+        latitude:
+          type:
+          - number
+          - "null"
+          format: float
+        longitude:
+          type:
+          - number
+          - "null"
+          format: float
+        isActive:
+          type:
+          - boolean
+          - "null"
+        openedAt:
+          type:
+          - string
+          - "null"
+          format: date-time
+        closedAt:
+          type:
+          - string
+          - "null"
+          format: date-time
+        createdAt:
+          type:
+          - string
+          - "null"
+          format: date-time
+        createdBy:
+          type:
+          - string
+          - "null"
+          format: uuid
+        updatedAt:
+          type:
+          - string
+          - "null"
+          format: date-time
+        updatedBy:
+          type:
+          - string
+          - "null"
+          format: uuid
+    StoredBranch:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        body:
+          $ref: "#/components/schemas/BranchDTO"
+    CurrentBankOwnerView:
+      type: object
+      properties:
+        tenantId:
+          type: string
+          format: uuid
+        bankId:
+          type: string
+          format: uuid
+        enrollmentId:
+          type: string
+          format: uuid
+        version:
+          type: integer
+          format: int64
+        institutionId:
+          type: string
+          format: uuid
+        issuerAuthorityId:
+          type: string
+          format: uuid
+        allowedUses:
+          type: array
+          items:
+            type: string
+          uniqueItems: true
+        controlVersion:
+          type: integer
+          format: int64
+        ownershipGeneration:
+          type: integer
+          format: int64
+        bankGeneration:
+          type: integer
+          format: int64
+        sourceGeneration:
+          type: integer
+          format: int64
+        currentUntilEpochMillis:
+          type: integer
+          format: int64
+        observationUntilEpochMillis:
+          type: integer
+          format: int64
     BranchView:
       type: object
       properties:
@@ -67,14 +294,8 @@ components:
           format: uuid
         label:
           type: string
-    BranchDraft:
-      type: object
-      additionalProperties: true
-    StoredBranch:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        body:
-          $ref: "#/components/schemas/BranchDraft"
+  securitySchemes:
+    organizationBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

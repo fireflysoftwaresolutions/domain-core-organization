@@ -1,0 +1,55 @@
+# This stateless HTTP read has no domain-owned relational store. Existing branch workflows
+# use their unchanged sandbox/core adapters; this profile does not qualify persistent Saga storage.
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          organization-owner-read:
+            provider: organization-owner
+            client-id: ${FIREFLY_OWNER_CLIENT_ID}
+            client-secret: ${FIREFLY_OWNER_CLIENT_SECRET}
+            client-authentication-method: client_secret_basic
+            authorization-grant-type: client_credentials
+        provider:
+          organization-owner:
+            token-uri: ${FIREFLY_OWNER_TOKEN_URI}
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration
+      - org.springframework.boot.r2dbc.autoconfigure.R2dbcAutoConfiguration
+      - org.springframework.boot.data.r2dbc.autoconfigure.DataR2dbcAutoConfiguration
+      - org.springframework.boot.flyway.autoconfigure.FlywayAutoConfiguration
+firefly:
+  orchestration:
+    rest:
+      enabled: false
+  organization:
+    current-owner:
+      enabled: true
+      policy:
+        base-uri: ${FIREFLY_OWNER_POLICY_BASE_URI}
+        decision-path: ${FIREFLY_OWNER_POLICY_DECISION_PATH}
+      machine:
+        tenant-id: ${FIREFLY_OWNER_RESOURCE_TENANT_ID}
+        bank-id: ${FIREFLY_OWNER_RESOURCE_BANK_ID}
+        registration-id: organization-owner-read
+        base-uri: ${FIREFLY_OWNER_CORE_BASE_URI}
+        token-uri: ${FIREFLY_OWNER_TOKEN_URI}
+        jwks-uri: ${FIREFLY_OWNER_JWKS_URI}
+        issuer: ${FIREFLY_OWNER_ISSUER}
+        audience: ${FIREFLY_OWNER_AUDIENCE}
+        subject: ${FIREFLY_OWNER_SUBJECT}
+        client-id: ${FIREFLY_OWNER_CLIENT_ID}
+        machine-tenant-id: ${FIREFLY_OWNER_MACHINE_TENANT_ID}
+  security:
+    resource-server:
+      enabled: true
+      strict-policy: true
+      issuer: ${FIREFLY_OWNER_CALLER_ISSUER}
+      audiences: ${FIREFLY_OWNER_CALLER_AUDIENCE}
+      jwk-set-uri: ${FIREFLY_OWNER_CALLER_JWKS_URI}
+      tenant-required: true
+      tenant-claim-paths: [tenant_id]
+      signature-algorithms: [RS256]
+      permit-matchers: [/v3/api-docs, /v3/api-docs.yaml, /v3/api-docs/**, /actuator/health]
