@@ -23,7 +23,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /** Default adapter. Holds rows in memory and does not call the core. */
-public final class SandboxBranchAdapter implements BranchPort {
+public final class SandboxBranchAdapterImpl implements BranchPort {
     private final ConcurrentHashMap<UUID, BranchDTO> rows = new ConcurrentHashMap<>();
 
     @Override

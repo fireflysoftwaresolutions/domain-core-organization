@@ -18,7 +18,7 @@ public class CurrentBankOwnerConfiguration{
   var decoder=NimbusReactiveJwtDecoder.withJwkSetUri(profile.jwksUri().toString()).jwsAlgorithm(SignatureAlgorithm.RS256).build();
   OAuth2TokenValidator<Jwt> audience=jwt->jwt.getAudience().contains(profile.audience())?OAuth2TokenValidatorResult.success():OAuth2TokenValidatorResult.failure(new OAuth2Error("invalid_token"));decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(JwtValidators.createDefaultWithIssuer(profile.issuer()),audience));
   Clock clock=Clock.systemUTC();LongSupplier nanos=System::nanoTime;
-  var source=new SdkCurrentBankOwnerSource(profile,clients,registrations,decoder,new ApiClient().getWebClient(),clock,nanos);
+  var source=new SdkCurrentBankOwnerSourceImpl(profile,clients,registrations,decoder,new ApiClient().getWebClient(),clock,nanos);
   return new CurrentBankOwnerReadServiceImpl(contexts,policies,source,clock,nanos);
  }
 }

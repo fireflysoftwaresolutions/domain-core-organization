@@ -15,11 +15,11 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 import java.time.*;import java.util.*;import java.util.function.LongSupplier;import java.util.stream.Collectors;
 
-public final class SdkCurrentBankOwnerSource implements CurrentBankOwnerSource {
+public final class SdkCurrentBankOwnerSourceImpl implements CurrentBankOwnerSource {
  private final BankOwnerMachineRegistration profile;private final ReactiveOAuth2AuthorizedClientManager clients;
  private final ReactiveClientRegistrationRepository registrations;private final ReactiveJwtDecoder decoder;
  private final WebClient transport;private final Clock clock;private final LongSupplier nanos;
- public SdkCurrentBankOwnerSource(BankOwnerMachineRegistration profile,ReactiveOAuth2AuthorizedClientManager clients,
+ public SdkCurrentBankOwnerSourceImpl(BankOwnerMachineRegistration profile,ReactiveOAuth2AuthorizedClientManager clients,
    ReactiveClientRegistrationRepository registrations,ReactiveJwtDecoder decoder,WebClient transport,Clock clock,LongSupplier nanos){
   this.profile=Objects.requireNonNull(profile);this.clients=Objects.requireNonNull(clients);this.registrations=Objects.requireNonNull(registrations);this.decoder=Objects.requireNonNull(decoder);this.transport=Objects.requireNonNull(transport);this.clock=Objects.requireNonNull(clock);this.nanos=Objects.requireNonNull(nanos);
  }

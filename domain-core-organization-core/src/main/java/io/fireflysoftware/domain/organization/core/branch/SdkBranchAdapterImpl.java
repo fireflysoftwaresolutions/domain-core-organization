@@ -23,10 +23,10 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 /** Live adapter. Selected with firefly.organization.branch.adapter=core. */
-public final class SdkBranchAdapter implements BranchPort {
+public final class SdkBranchAdapterImpl implements BranchPort {
     private final BranchManagementApi api;
 
-    public SdkBranchAdapter(BranchManagementApi api) {
+    public SdkBranchAdapterImpl(BranchManagementApi api) {
         this.api = api;
     }
 

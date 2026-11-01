@@ -30,12 +30,12 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-@Service
-public class BranchService {
+@Service("branchService")
+public class BranchServiceImpl {
     private final SagaEngine engine;
     private final BranchPort port;
 
-    public BranchService(SagaEngine engine, BranchPort port) {
+    public BranchServiceImpl(SagaEngine engine, BranchPort port) {
         this.engine = engine;
         this.port = port;
     }
