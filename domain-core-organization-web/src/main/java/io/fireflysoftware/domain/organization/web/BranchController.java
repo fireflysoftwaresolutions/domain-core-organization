@@ -17,7 +17,7 @@
 package io.fireflysoftware.domain.organization.web;
 
 import io.fireflysoftware.core.org.sdk.model.BranchDTO;
-import io.fireflysoftware.domain.organization.core.branch.BranchService;
+import io.fireflysoftware.domain.organization.core.branch.BranchServiceImpl;
 import io.fireflysoftware.domain.organization.core.branch.BranchView;
 import io.fireflysoftware.domain.organization.core.branch.StoredBranch;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,9 +34,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/branches")
 public class BranchController {
-    private final BranchService service;
+    private final BranchServiceImpl service;
 
-    public BranchController(BranchService service) {
+    public BranchController(BranchServiceImpl service) {
         this.service = service;
     }
 

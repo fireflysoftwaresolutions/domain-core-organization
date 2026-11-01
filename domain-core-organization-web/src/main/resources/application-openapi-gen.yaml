@@ -1,0 +1,6 @@
+spring:
+  config:
+    import: classpath:application-current-bank-owner.yaml
+# The original DomainApplication and its real service configuration generate the contract.
+# The owned producer gate supplies exact trust and client registration. No service override,
+# generated contract, machine credential, or authority response is embedded in this profile.

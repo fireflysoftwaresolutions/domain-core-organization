@@ -36,7 +36,7 @@ class SdkBranchAdapterTest {
                 .withUserConfiguration(BranchAdapterConfiguration.class)
                 .run(context -> {
                     BranchPort port = context.getBean(BranchPort.class);
-                    assertThat(port).isInstanceOf(SandboxBranchAdapter.class);
+                    assertThat(port).isInstanceOf(SandboxBranchAdapterImpl.class);
                     assertThat(port.read(null).block().label()).isEqualTo("HQ");
                 });
     }
@@ -46,7 +46,7 @@ class SdkBranchAdapterTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(BranchAdapterConfiguration.class, io.fireflysoftware.domain.organization.infra.BranchClientFactory.class)
                 .withPropertyValues("firefly.organization.branch.adapter=core")
-                .run(context -> assertThat(context.getBean(BranchPort.class)).isInstanceOf(SdkBranchAdapter.class));
+                .run(context -> assertThat(context.getBean(BranchPort.class)).isInstanceOf(SdkBranchAdapterImpl.class));
     }
 
     @Test
@@ -56,7 +56,7 @@ class SdkBranchAdapterTest {
         BranchDTO dto = mock(BranchDTO.class);
         when(dto.getId()).thenReturn(id);
         when(api.getBranchById(id, null)).thenReturn(Mono.just(dto));
-        BranchView view = new SdkBranchAdapter(api).read(id).block();
+        BranchView view = new SdkBranchAdapterImpl(api).read(id).block();
         assertThat(view.id()).isEqualTo(id);
         verify(api).getBranchById(id, null);
     }

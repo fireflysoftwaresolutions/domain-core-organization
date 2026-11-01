@@ -14,3 +14,5 @@ Developed by the Firefly Software Foundation. [dev@fireflysoftware.io](mailto:de
 Reads a branch from core-common-org-mgmt through core-common-org-mgmt-sdk (`BranchManagementApi.getBranchById`).
 
 `firefly.organization.branch.adapter` defaults to `sandbox`. `core` selects the SDK adapter. The sandbox returns one sample branch and does not open a socket.
+
+The default-off [current Bank enrollment owner read](docs/current-bank-owner.md) adds a scoped administrative observation through the genuine core SDK. See the guide for current principal/PDP checks, finite observation limits, machine registration, original OpenAPI generation, and qualification boundaries.

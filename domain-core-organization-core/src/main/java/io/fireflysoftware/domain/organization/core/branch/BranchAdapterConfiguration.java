@@ -26,12 +26,12 @@ public class BranchAdapterConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "firefly.organization.branch", name = "adapter", havingValue = "sandbox", matchIfMissing = true)
     public BranchPort sandboxBranchPort() {
-        return new SandboxBranchAdapter();
+        return new SandboxBranchAdapterImpl();
     }
 
     @Bean
     @ConditionalOnProperty(prefix = "firefly.organization.branch", name = "adapter", havingValue = "core")
     public BranchPort coreBranchPort(BranchManagementApi api) {
-        return new SdkBranchAdapter(api);
+        return new SdkBranchAdapterImpl(api);
     }
 }
